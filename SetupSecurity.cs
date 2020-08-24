@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
-namespace Lab4_3_AspNetMVC_BlindDating
+namespace Lab4_3_AspNetCoreMVC_BlindDating
 {
     public static class SetupSecurity
     {
