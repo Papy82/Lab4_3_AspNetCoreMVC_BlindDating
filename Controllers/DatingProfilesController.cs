@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Lab4_3_AspNetCoreMVC_BlindDating.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace Lab4_3_AspNetCoreMVC_BlindDating.Controllers
 {
@@ -15,12 +18,14 @@ namespace Lab4_3_AspNetCoreMVC_BlindDating.Controllers
     {
         private readonly BlindDatingContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IHostingEnvironment _webroot;
         private UserManager<IdentityUser> userManager;
 
-        public DatingProfilesController(BlindDatingContext context, UserManager<IdentityUser> userManager)
+        public DatingProfilesController(BlindDatingContext context, UserManager<IdentityUser> userManager, IHostingEnvironment webroot)
         {
             _context = context;
             _userManager = userManager;
+            _webroot = webroot;
         }
 
         [Authorize]
@@ -104,15 +109,34 @@ namespace Lab4_3_AspNetCoreMVC_BlindDating.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Age,Gender,Bio,UserAccountId")] DatingProfile datingProfile)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Age,Gender,Bio,UserAccountId,DisplayName")] DatingProfile datingProfile, IFormFile FilePhoto)
         {
-            if (ModelState.IsValid)
+            //Binary Photo Data
+            if (FilePhoto.Length>0)
             {
-                _context.Add(datingProfile);
+                string photoPath =
+             _webroot.WebRootPath + "\\userPhoto\\";
+                var fileName =
+             Path.GetFileName(FilePhoto.FileName);
+
+                using(var stream = System.IO.File.Create(photoPath + fileName))
+                {
+                    await
+                        FilePhoto.CopyToAsync(stream);
+                    datingProfile.PhotoPath = fileName;
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(datingProfile);
+
+           // if (ModelState.IsValid)
+            {
+                //_context.Add(datingProfile);
+               // await _context.SaveChangesAsync();
+               // return RedirectToAction(nameof(Index));
+            }
+            //return View(datingProfile);
         }
 
         // GET: DatingProfiles/Edit/5
@@ -139,7 +163,7 @@ namespace Lab4_3_AspNetCoreMVC_BlindDating.Controllers
         [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Age,Gender,Bio,UserAccountId")] DatingProfile datingProfile)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Age,Gender,Bio,UserAccountId, DisplayName")] DatingProfile datingProfile)
         {
             if (id != datingProfile.Id)
             {

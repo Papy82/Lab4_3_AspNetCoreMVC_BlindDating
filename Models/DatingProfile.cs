@@ -12,5 +12,6 @@ namespace Lab4_3_AspNetCoreMVC_BlindDating.Models
         public string Gender { get; set; }
         public string Bio { get; set; }
         public string UserAccountId { get; set; }
+        public string PhotoPath { get; internal set; }
     }
 }
