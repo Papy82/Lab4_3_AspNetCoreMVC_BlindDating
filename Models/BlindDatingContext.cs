@@ -29,8 +29,10 @@ namespace Lab4_3_AspNetCoreMVC_BlindDating.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
+#pragma warning disable CS1030 // #warning directive
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=localhost\\sqlexpress;Database=BlindDating;Trusted_Connection=True;MultipleActiveResultSets=true;");
+#pragma warning restore CS1030 // #warning directive
             }
         }
 

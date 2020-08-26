@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using MailMessage = Lab4_3_AspNetCoreMVC_BlindDating.Models.MailMessage;
 
 namespace Lab4_3_AspNetCoreMVC_BlindDating.ViewModels
 {

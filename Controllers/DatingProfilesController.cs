@@ -114,29 +114,29 @@ namespace Lab4_3_AspNetCoreMVC_BlindDating.Controllers
             //Binary Photo Data
             if (FilePhoto.Length>0)
             {
-                string photoPath =
-             _webroot.WebRootPath + "\\userPhoto\\";
+                string photoPath = _webroot.WebRootPath + "\\userPhoto\\";
                 var fileName =
              Path.GetFileName(FilePhoto.FileName);
 
                 using(var stream = System.IO.File.Create(photoPath + fileName))
                 {
-                    await
-                        FilePhoto.CopyToAsync(stream);
+                    await FilePhoto.CopyToAsync(stream);
                     datingProfile.PhotoPath = fileName;
                 }
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(datingProfile);
 
-           // if (ModelState.IsValid)
-            {
-                //_context.Add(datingProfile);
-               // await _context.SaveChangesAsync();
-               // return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _context.Add(datingProfile);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("profileInfo");
+                }
+                return View(datingProfile);
+
+
+
             }
-            //return View(datingProfile);
+
+            // 
         }
 
         // GET: DatingProfiles/Edit/5
