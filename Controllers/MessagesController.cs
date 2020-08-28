@@ -16,29 +16,29 @@ namespace Lab4_3_AspNetCoreMVC_BlindDating.Controllers
         private UserManager<IdentityUser> _userManager;
         //private UserManager<IdentityUser> userManager;
 
-        public MessagesController(BlindDatingContext context, UserManager<IdentityUser>userManager)
+        public MessagesController(BlindDatingContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
         public IActionResult Inbox()
         {
-           
+
             DatingProfile profile = _context.DatingProfile.FirstOrDefault(IdentityBuilder => IdentityBuilder.UserAccountId == _userManager.GetUserId(User));
 
             InboxViewModel inbox = new InboxViewModel();
-            inbox.mailMessage = _context.MailMessage.Where(to => to.ToProfileId == profile.Id).ToList();
+            inbox.mailMessages = _context.MailMessage.Where(to => to.ToProfileId == profile.Id).ToList();
 
             List<DatingProfile> fromList = new List<DatingProfile>();
-            foreach(var msg in inbox.mailMessage)
+            foreach (var msg in inbox.mailMessages)
             {
                 fromList.Add(_context.DatingProfile.FirstOrDefault(from => from.Id == msg.FromProfileId));
             }
 
             inbox.fromProfiles = fromList;
             return View(inbox);
-                
-         
+
+
         }
 
         public IActionResult NewMessage(int id)
@@ -56,5 +56,20 @@ namespace Lab4_3_AspNetCoreMVC_BlindDating.Controllers
             return View(mail);
         }
 
+        [HttpPost]
+        [Authorize]
+        public IActionResult Send([Bind("MessageTitle, MessageText")] MailMessage mail, int toProfileId)
+        {
+            DatingProfile fromUser = _context.DatingProfile.FirstOrDefault(p => p.UserAccountId == _userManager.GetUserId(User));
+            mail.FromProfileId = fromUser.Id;
+            mail.IsRead = false;
+            mail.FromProfile = fromUser;
+            mail.ToProfileId = toProfileId;
+
+            _context.Add(mail);
+            _context.SaveChanges();
+
+            return RedirectToAction("Browse", "DatingProfiles");
+        }
     }
 }

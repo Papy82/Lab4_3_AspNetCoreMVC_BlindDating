@@ -10,7 +10,7 @@ namespace Lab4_3_AspNetCoreMVC_BlindDating.ViewModels
 {
     public class InboxViewModel
     {
-        public IEnumerable<MailMessage> mailMessage;
+        public IEnumerable<MailMessage> mailMessages;
         public IEnumerable<DatingProfile> fromProfiles;
     }
 }

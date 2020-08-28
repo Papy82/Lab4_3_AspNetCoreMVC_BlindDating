@@ -1,0 +1,44 @@
+﻿@model Lab4_3_AspNetCoreMVC_BlindDating.Models.MailMessage
+@{
+    ViewData["Title"] = "Read";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Read</h2>
+
+<div>
+    <h4>MailMessage</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MessageTitle)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MessageTitle)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MessageText)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MessageText)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsRead)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsRead)
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="NewMessage">Respond</a>
+</div>
+
+<div>
+    <a asp-action="Inbox">Back to Inbox</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
